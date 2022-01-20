@@ -7,7 +7,7 @@ import userRoute from "./userRoute"
 
 export default {
     path: '/manage',
-    name: "Manage",
+    // name: "Manage",
     component: Manage,
     meta: {
         reqiuredAuth: true
@@ -18,8 +18,6 @@ export default {
         }, {
             path: 'home',
             component: Home,
-
-
         },
         goodsRoute,
         {
@@ -27,7 +25,7 @@ export default {
             component: Order
         },
         userRoute,
-        
+
     ],
 
 }

@@ -178,16 +178,13 @@ Vue.config.productionTip = false
 
 //设置全局路由守卫，从而达到页面权限
 router.beforeEach(function(to,from,next){
-  console.log('login?',store.getters.isLogin);
   // 确定是否有登录
   if(to.matched.some(item=>item.meta.reqiuredAuth)){
     if(store.getters.isLogin){
+     
       next();
       //检验token是否有被篡改。
-      router.app.$request.get('/user/verify',{
-        headers:{Authorization:store.state.user.authorization}
-      }).then(({data})=>{
-  
+      router.app.$request.get('/manage/verify').then(({data})=>{
         //做token验证不通过处理
         if(data.code===401){
           router.push('/login',{

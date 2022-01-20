@@ -2,34 +2,34 @@ import request from '../utils/request'
 import router from '../router';
 import authRouter from "../router/authRouter"
 
-let user = localStorage.getItem("user");
+let userInfo = localStorage.getItem("userInfo");
 
 try {
-    user = JSON.parse(user) || [];
+    userInfo = JSON.parse(userInfo) || {};
 } catch (err) {
-    user = [];
+    userInfo = {};
 }
 
 export default {
     namespaced: true,
     state: {
-        user,
+        userInfo,
     },
     getters: {
         isLogin(state) {
-            return !!state.user._id
+            return !!state.userInfo._id
         }
     },
     mutations: {
         //登录
         login(state, payload) {
-            state.user = payload;
-            localStorage.setItem('user', JSON.stringify(state.user))
+            state.userInfo = payload;
+            localStorage.setItem('userInfo', JSON.stringify(state.userInfo))
         },
         // 退出登录
         loginOut(state) {
-            state.user = {}
-            localStorage.removeItem('user')
+            state.userInfo = {}
+            localStorage.removeItem('userInfo')
         },
         //动态配置路由
         addRoute() {
@@ -57,9 +57,10 @@ export default {
                 });
                 if (data.code === 200) {
                     //如果登录成功，就把新的登录人员写进localStorage。
-                    context.commit('login', data.data)
+                    context.commit('login', data.data[0])
                     context.commit('addRoute')
                 }
+
 
                 return data
             },

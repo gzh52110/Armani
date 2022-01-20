@@ -3,6 +3,8 @@ import Goods from "@/views/Manage/Goods.vue"
 import Add from "@/views/Manage/goods/add.vue"
 import Edit from "@/views/Manage/goods/edit.vue"
 import List from "@/views/Manage/goods/list.vue"
+import goodslistCategory from "./goodslistCategory"
+
 
 
 export default {
@@ -20,6 +22,7 @@ export default {
         component:Edit
     },{
         path:'list',
-        component:List
+        component:List,
+        children:goodslistCategory
     }]
 }
