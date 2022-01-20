@@ -178,6 +178,7 @@ Vue.config.productionTip = false
 
 //设置全局路由守卫，从而达到页面权限
 router.beforeEach(function(to,from,next){
+  console.log('login?',store.getters.isLogin);
   // 确定是否有登录
   if(to.matched.some(item=>item.meta.reqiuredAuth)){
     if(store.getters.isLogin){
