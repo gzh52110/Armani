@@ -1,20 +1,20 @@
 <template>
   <div class="manageBox">
     <el-container height="100vh">
-      <el-header class="header" >
+      <el-header class="header">
         <el-row :gutter="20">
           <el-col :span="12">
             <i class="el-icon-goods"></i>
             <span>Armani后台管理系统</span>
           </el-col>
           <el-col :span="12" style="text-align: right">
-            {{ user.username }}
+            {{ userInfo.username }}
             <el-button type="text" @click="logOut">退出</el-button>
           </el-col>
         </el-row>
       </el-header>
       <el-container>
-        <el-aside width="200px"  >
+        <el-aside width="200px">
           <!-- 侧边导航 -->
           <el-menu
             :default-active="activeIndex"
@@ -25,49 +25,74 @@
             text-color="#fff"
             active-text-color="rgb(173, 95, 122)"
             router
-            style="height:100%"
-           
+            style="height: 100%"
           >
+            <!-- 一级导航 -->
             <template v-for="item in list">
               <el-submenu
                 :index="baseUrl + item.path"
                 :key="item.path"
                 v-if="item.children"
               >
-                <template v-slot:title>
-                  <i :class="item.icon"></i>
-                  <span>{{ item.text }}</span>
-                </template>
-                <!-- 二级导航 -->
-                <el-menu-item
-                  :index="baseUrl + item.path + value.path"
-                  v-for="value in item.children"
-                  :key="value.path"
+                <template v-slot:title
+                  ><i :class="item.icon"></i
+                  ><span>{{ item.text }}</span></template
                 >
-                  {{ value.text }}
-                </el-menu-item>
+                <!-- 二级导航 -->
+                <template v-for="value in item.children">
+                  <el-submenu
+                    :index="baseUrl + item.path + value.path"
+                    :key="value.path"
+                    v-if="value.children"
+                  >
+                    <template v-slot:title
+                      ><span>{{ value.text }}</span></template
+                    >
+                    <!-- 三级导航 -->
+                    <template v-for="it in value.children" >
+                      <el-menu-item
+                        :key="it.path"
+                        :index="baseUrl + item.path + value.path + it.path"
+                        :dataset="$store.state.goodslist.goodslist.mainCategory"
+                      >
+                        <span>{{ it.text }}</span>
+                      </el-menu-item>
+                    </template>
+                  </el-submenu>
+                  <el-menu-item
+                    :key="value.path"
+                    :index="baseUrl + item.path + value.path"
+                    v-else
+                  >
+                    <template
+                      ><span>{{ value.text }}</span></template
+                    >
+                  </el-menu-item>
+                </template>
               </el-submenu>
               <el-menu-item
                 :index="baseUrl + item.path"
                 :key="item.path"
                 v-else
               >
-                <template>
-                  <i :class="item.icon"></i>
-                  <span>{{ item.text }}</span>
-                </template>
+                <template
+                  ><i :class="item.icon"></i
+                  ><span>{{ item.text }}</span></template
+                >
               </el-menu-item>
             </template>
           </el-menu>
         </el-aside>
-        <el-main><router-view /></el-main>
+        <el-main>
+          <router-view />
+        </el-main>
       </el-container>
     </el-container>
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -106,6 +131,27 @@ export default {
             {
               text: "商品列表",
               path: "/list",
+              children: [
+                {
+                  text: "全部",
+                  path: "/all",
+                },
+                {
+                  text: "彩妆",
+                  path: "/makeup",
+                },
+                {
+                  text: "护肤",
+                  path: "/skincare",
+                },
+                {
+                  text: "香水",
+                  path: "/fragrance",
+                },{
+                  text: "其他",
+                  path: "/others",
+                }
+              ],
             },
           ],
         },
@@ -152,13 +198,14 @@ export default {
     };
   },
   computed: {
-   ...mapState(['user'])
+    //...mapState('countAbout', ['sum', 'school', 'subject'])
+    ...mapState("user", ["userInfo"]),
   },
   methods: {
     handleSelect() {},
     logOut() {
-      this.$store.commit("loginOut");
-      this.$router.push('/login')
+      this.$store.commit("user/loginOut");
+      this.$router.push("/login");
     },
   },
 };
@@ -170,7 +217,8 @@ export default {
   color: #fff;
   line-height: 60px;
 }
-.el-main{
+
+.el-main {
   padding-top: 5px;
   padding-bottom: 0px;
 }

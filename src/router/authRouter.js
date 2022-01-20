@@ -7,7 +7,7 @@ import Order from "../views/Manage/Order.vue"
 
 export default {
     path: '/manage',
-    name: "Manage",
+    // name: "Manage",
     component: Manage,
     meta: {
         reqiuredAuth: true
@@ -16,6 +16,7 @@ export default {
         path:'',
         redirect:'home'
     },{
+        name:'Home',
         path: 'home',
         component: Home,
         
