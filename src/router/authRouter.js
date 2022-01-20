@@ -3,7 +3,7 @@ import Manage from "../views/Manage/Manage.vue"
 import Home from "../views/Manage/Home.vue"
 import goodsRoute from "./goodsRoute"
 import Order from "../views/Manage/Order.vue"
-
+import userRoute from "./userRoute"
 
 export default {
     path: '/manage',
@@ -13,17 +13,21 @@ export default {
         reqiuredAuth: true
     },
     children: [{
-        path:'',
-        redirect:'home'
-    },{
-        path: 'home',
-        component: Home,
+            path: '',
+            redirect: 'home'
+        }, {
+            path: 'home',
+            component: Home,
+
+
+        },
+        goodsRoute,
+        {
+            path: 'order',
+            component: Order
+        },
+        userRoute,
         
-        
-    },
-    goodsRoute,
-    {
-        path:'order',
-        component:Order
-    }]
+    ],
+
 }

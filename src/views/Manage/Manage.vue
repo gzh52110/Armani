@@ -1,7 +1,7 @@
 <template>
   <div class="manageBox">
     <el-container height="100vh">
-      <el-header class="header" >
+      <el-header class="header">
         <el-row :gutter="20">
           <el-col :span="12">
             <i class="el-icon-goods"></i>
@@ -14,7 +14,7 @@
         </el-row>
       </el-header>
       <el-container>
-        <el-aside width="200px"  >
+        <el-aside width="200px">
           <!-- 侧边导航 -->
           <el-menu
             :default-active="activeIndex"
@@ -25,8 +25,7 @@
             text-color="#fff"
             active-text-color="rgb(173, 95, 122)"
             router
-            style="height:100%"
-           
+            style="height: 100%"
           >
             <template v-for="item in list">
               <el-submenu
@@ -67,7 +66,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -152,13 +151,13 @@ export default {
     };
   },
   computed: {
-   ...mapState(['user'])
+    ...mapState(["user"]),
   },
   methods: {
     handleSelect() {},
     logOut() {
       this.$store.commit("loginOut");
-      this.$router.push('/login')
+      this.$router.push("/login");
     },
   },
 };
@@ -170,8 +169,12 @@ export default {
   color: #fff;
   line-height: 60px;
 }
-.el-main{
+.el-main {
   padding-top: 5px;
   padding-bottom: 0px;
+}
+.el-aside {
+  height: 100vh;
+  overflow-x: hidden;
 }
 </style>
