@@ -49,7 +49,7 @@
                       ><span>{{ value.text }}</span></template
                     >
                     <!-- 三级导航 -->
-                    <template v-for="it in value.children" >
+                    <template v-for="it in value.children">
                       <el-menu-item
                         :key="it.path"
                         :index="baseUrl + item.path + value.path + it.path"
@@ -147,10 +147,11 @@ export default {
                 {
                   text: "香水",
                   path: "/fragrance",
-                },{
+                },
+                {
                   text: "其他",
                   path: "/others",
-                }
+                },
               ],
             },
           ],
@@ -224,5 +225,24 @@ export default {
 .el-aside {
   height: 100vh;
   overflow-x: hidden;
+}
+
+/* 设置滚动条的样式 */
+::-webkit-scrollbar {
+  width: 15px;
+}
+/* 滚动槽 */
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset006pxrgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(46, 116, 207, 0.4);
 }
 </style>
