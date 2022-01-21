@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from "./router"
 import store from "./store"
-import request,{host} from "./utils/request"
+import request,{host,baseURL} from "./utils/request"
 
 import {
   Pagination,
@@ -81,6 +81,7 @@ import {
   Loading,
   MessageBox,
   Message,
+  descriptions
  
 } from 'element-ui';
 
@@ -157,11 +158,13 @@ Vue.use(Calendar);
 Vue.use(Backtop);
 Vue.use(PageHeader);
 Vue.use(CascaderPanel);
+Vue.use(descriptions)
 
 
 Vue.use(Loading.directive);
 
 Vue.prototype.$host = host;
+Vue.prototype.$baseURL = baseURL;
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
