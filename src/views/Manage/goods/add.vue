@@ -14,17 +14,28 @@
       <el-form-item label="商品图片" prop="imgUrl">
         <el-upload
           class="avatar-uploader"
-          :action="$baseURL + '/product'"
+          :action="$host+'/product'"
           :show-file-list="false"
-          :on-success="handleAvatarSuccess"
+          :http-request="uploadImg"
+          :auto-upload="false"
           :before-upload="beforeAvatarUpload"
+          name="goods"
+          list-type="picture-card"
         >
-          <img
-            v-if="ruleForm.imageUrl"
-            :src="ruleForm.imageUrl"
+          <i class="el-icon-plus"></i>
+          <template v-slot="{file}">
+            <img
+              class="el-upload-list__item-thumbnail"
+              :src="file.url"
+              alt=""
+            />
+          </template>
+          <!-- <img
+            v-if="ruleForm.imgUrl"
+            :src="ruleForm.imgUrl"
             class="avatar"
           />
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i> -->
         </el-upload>
       </el-form-item>
       <el-form-item label="价格">
@@ -53,8 +64,8 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="商品简介" prop="desc">
-        <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+      <el-form-item label="商品简介" prop="introduction">
+        <el-input type="textarea" v-model="ruleForm.introduction"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')"
@@ -75,19 +86,39 @@ export default {
         productName: "",
         defaultPrice: "",
         hotLabel: "",
-        desc: "",
+        introduction: "",
         imgUrl: "",
         mainCategory: "m-makeup",
+        productCode: "",
       },
       rules: {
         productName: [
-          { required: true, message: "请输入商品名称", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+          {
+            required: true,
+            message: "请输入商品名称",
+            trigger: "blur",
+          },
+          {
+            min: 3,
+            max: 5,
+            message: "长度在 3 到 5 个字符",
+            trigger: "blur",
+          },
         ],
         defaultPrice: [
-          { required: true, message: "请选择商品分类", trigger: "blur" },
+          {
+            required: true,
+            message: "请选择商品分类",
+            trigger: "blur",
+          },
         ],
-        desc: [{ required: true, message: "请填写商品简介", trigger: "blur" }],
+        desc: [
+          {
+            required: true,
+            message: "请填写商品简介",
+            trigger: "blur",
+          },
+        ],
       },
       category: [
         {
@@ -128,9 +159,12 @@ export default {
     };
   },
   methods: {
-    handleAvatarSuccess(res, file) {
-      this.ruleForm.imageUrl = URL.createObjectURL(file.raw);
-      console.log("this.ruleForm.imageUrl", this.ruleForm.imageUrl);
+    uploadImg(fileInfo) {
+      console.log("fileInfo", fileInfo);
+      const fData = new FormData();
+        fData.set('goods',fileInfo.file)
+      // console.log('fileList',fileList);
+      // this.ruleForm.imgUrl = URL.createObjectURL(fileInfo.file.name);
     },
     beforeAvatarUpload(file) {
       // const isJPG = file.type === 'image/jpeg';
@@ -147,10 +181,12 @@ export default {
     submitForm() {
       this.$refs.ruleForm.validate(async (valid) => {
         if (valid) {
-          const data = await this.$store.dispatch("goodslist/goodsList", this.ruleForm);
-          console.log('this.ruleForm',this.ruleForm);
-          console.log('adddata',data);
-          
+          const data = await this.$store.dispatch(
+            "goodslist/goodsList",
+            this.ruleForm
+          );
+          console.log("this.ruleForm", this.ruleForm);
+          console.log("adddata", data);
         }
       });
 
@@ -171,9 +207,11 @@ export default {
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -182,6 +220,7 @@ export default {
   line-height: 178px;
   text-align: center;
 }
+
 .avatar {
   width: 178px;
   height: 178px;

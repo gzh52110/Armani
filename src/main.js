@@ -4,6 +4,7 @@ import router from "./router"
 import store from "./store"
 import request,{host,baseURL} from "./utils/request"
 
+
 import {
   Pagination,
   Dialog,
@@ -177,6 +178,8 @@ Vue.prototype.$message = Message;
 
 Vue.prototype.$request = request
 Vue.config.productionTip = false
+
+
 
 
 //设置全局路由守卫，从而达到页面权限
