@@ -1,49 +1,39 @@
 <template>
-  <div class="user">
-    <h1>用户列表</h1>
+  <div class="role">
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: '/manage/role/list' }"
+        >角色权限</el-breadcrumb-item
+      >
+      <el-breadcrumb-item>角色列表</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-table
-      :data="usersList"
+      :data="roleList"
       style="width: 100%"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="expand">
-        <template slot-scope="props">
-          <el-form label-position="left" inline class="demo-table-expand">
-            <el-form-item label="账号ID">
-              <span>{{ props.row._id }}</span>
-            </el-form-item>
-            <el-form-item label="手机号码">
-              <span>{{ props.row.phoneNumber }}</span>
-            </el-form-item>
-            <el-form-item label="性别">
-              <span>{{ props.row.gender }}</span>
-            </el-form-item>
-            <el-form-item label="生日">
-              <span>{{ props.row.birthday }}</span>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column>
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column label="#" type="index"></el-table-column>
       <el-table-column label="头像" prop="avatar">
         <template slot-scope="props">
           <el-avatar
-          shape="square"
-          :size="80"
-          fit="cover"
-          :src="serverHost + props.row.avatar"
-        ></el-avatar>
+            shape="square"
+            :size="80"
+            fit="cover"
+            :src="serverHost + props.row.avatar"
+          ></el-avatar>
         </template>
-        
       </el-table-column>
-      <el-table-column label="用户名" prop="username"></el-table-column>
+      <el-table-column
+        label="
+      角色中文名"
+        prop="cnName"
+      ></el-table-column>
+      <el-table-column label="角色英文名" prop="enName"></el-table-column>
       <el-table-column
         label="注册时间"
         prop="regtime"
         sortable
       ></el-table-column>
-      <el-table-column label="角色" prop="role"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
@@ -65,14 +55,15 @@ export default {
   data() {
     return {
       serverHost: "http://localhost:8889/",
-      usersList: [],
+      roleList: [],
       multipleSelection: [],
+      //⭐⚡角色列表的数据是来源于数据库，且要实现组件共享
     };
   },
   created() {
-    this.$request.get("/manage/userlist").then(({ data }) => {
-      this.usersList = data.data;
-      console.log("用户列表数据返回", data);
+    this.$request.get("/role/roleList").then(({ data }) => {
+      this.roleList = data.data.result;
+      console.log("角色列表数据返回", data);
     });
   },
   methods: {
@@ -88,10 +79,6 @@ export default {
       console.log("多选框功能", val);
       this.multipleSelection = val;
     },
-    //编辑：头像与个人信息
-    //删除
-    //将原来的普通用户与管理员用户合并，通过角色管理及权限管理来区分
-    //按钮权限和页面权限（动态添加路由）
   },
 };
 </script>

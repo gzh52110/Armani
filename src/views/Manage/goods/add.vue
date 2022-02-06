@@ -13,17 +13,15 @@
       <!-- 上传图片 -->
       <el-form-item label="商品图片" prop="imgUrl">
         <el-upload
+          ref="uploadForm"
+          name="productImg"
           class="avatar-uploader"
-          :action="$baseURL + '/product'"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
+          :action="$host + '/api/upload/avatar'"
+          :auto-upload="false"
+          :on-change="onChange"
+          :http-request="uploadFile"
         >
-          <img
-            v-if="ruleForm.imageUrl"
-            :src="ruleForm.imageUrl"
-            class="avatar"
-          />
+          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form-item>
@@ -71,6 +69,8 @@
 export default {
   data() {
     return {
+      imageUrl: "",
+      productId: "",
       ruleForm: {
         productName: "",
         defaultPrice: "",
@@ -147,16 +147,35 @@ export default {
     submitForm() {
       this.$refs.ruleForm.validate(async (valid) => {
         if (valid) {
-          const data = await this.$store.dispatch("goodslist/goodsList", this.ruleForm);
-          console.log('this.ruleForm',this.ruleForm);
-          console.log('adddata',data);
-          
+          const data = await this.$store.dispatch(
+            "goodslist/goodsList",
+            this.ruleForm
+          );
+          console.log("this.ruleForm", this.ruleForm);
+          console.log("adddata", data);
+          this.productId = data.data.insertedId;
+          // 上传图片
+          this.$refs.uploadForm.submit();
         }
       });
 
       //  this.$request.post('/product',this.ruleForm).then(({data})=>{
       //       console.log('data',data);
       //   })
+    },
+    async uploadFile(fileInfo) {
+      console.log("fileInfo", fileInfo);
+      const fData = new FormData();
+      fData.set("productImg", fileInfo.file);
+      fData.set("productId", this.productId);
+      console.log("fData", fData);
+      const res = await this.$request.put("/upload/productImg", fData);
+
+      console.log("上传图片返回", res);
+    },
+    onChange(file, fileList) {
+      console.log("onChange", file, fileList);
+      this.imageUrl = URL.createObjectURL(file.raw);
     },
   },
 };

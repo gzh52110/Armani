@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './user'
 import goodslist from './goodlist'
+import role from './role'
 
 
 Vue.use(Vuex)
@@ -18,7 +19,8 @@ const store = new Vuex.Store({
     },
     modules:{
         user,
-        goodslist
+        goodslist,
+        role
     },
 
 })

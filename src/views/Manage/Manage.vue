@@ -92,115 +92,29 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
       activeIndex: "1",
       baseUrl: "/manage",
-      list: [
-        {
-          text: "首页",
-          path: "/home",
-          icon: "el-icon-s-home",
-        },
-        {
-          text: "用户管理",
-          path: "/user",
-          icon: "el-icon-user",
-          children: [
-            {
-              text: "添加用户",
-              path: "/add",
-            },
-            {
-              text: "用户列表",
-              path: "/list",
-            },
-          ],
-        },
-        {
-          text: "商品管理",
-          path: "/goods",
-          icon: "el-icon-shopping-bag-1",
-          children: [
-            {
-              text: "添加商品",
-              path: "/add",
-            },
-            {
-              text: "商品列表",
-              path: "/list",
-              children: [
-                {
-                  text: "全部",
-                  path: "/all",
-                },
-                {
-                  text: "彩妆",
-                  path: "/makeup",
-                },
-                {
-                  text: "护肤",
-                  path: "/skincare",
-                },
-                {
-                  text: "香水",
-                  path: "/fragrance",
-                },
-                {
-                  text: "其他",
-                  path: "/others",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          text: "订单管理",
-          path: "/order",
-          icon: "el-icon-s-order",
-        },
-        {
-          text: "广告管理",
-          path: "/ad",
-          icon: "el-icon-data-board",
-          children: [
-            {
-              text: "添加广告",
-              path: "/ad",
-            },
-            {
-              text: "广告列表",
-              path: "/list",
-            },
-          ],
-        },
-        {
-          text: "角色权限",
-          path: "/access",
-          icon: "el-icon-key",
-          children: [
-            {
-              text: "添加角色",
-              path: "/add",
-            },
-            {
-              text: "角色列表",
-              path: "/list",
-            },
-            {
-              text: "权限指派",
-              path: "/set",
-            },
-          ],
-        },
-      ],
+      list: [],
     };
   },
   computed: {
     //...mapState('countAbout', ['sum', 'school', 'subject'])
     ...mapState("user", ["userInfo"]),
+    ...mapState("role", { userRole: "role" }),
+  },
+  async created() {
+    this.role = this.getRole(this.userInfo.role);
+    const { data } = await this.$request.get("/role/permission", {
+      params: {
+        role: this.userRole,
+      },
+    });
+    this.list = data.data.roleAccess;
+    console.log("roledata", data);
   },
   methods: {
     handleSelect() {},
@@ -208,6 +122,14 @@ export default {
       this.$store.commit("user/loginOut");
       this.$router.push("/login");
     },
+    ...mapMutations("role", {
+      getRole: "getRole", //映射this.change2为this.$store.commit('change')
+
+      // 函数形式：
+      change3: (commit, payload) => {
+        commit("change", payload);
+      },
+    }),
   },
 };
 </script>
@@ -244,5 +166,9 @@ export default {
 }
 ::-webkit-scrollbar-thumb:window-inactive {
   background: rgba(46, 116, 207, 0.4);
+}
+.el-breadcrumb {
+  font-size: 1.2em;
+  margin: 0.5em 0;
 }
 </style>

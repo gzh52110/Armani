@@ -3,7 +3,9 @@ import Manage from "../views/Manage/Manage.vue"
 import Home from "../views/Manage/Home.vue"
 import goodsRoute from "./goodsRoute"
 import Order from "../views/Manage/Order.vue"
-import userRoute from "./userRoute"
+import UserRoute from "./userRoute"
+import RoleRoute from "./roleRoute"
+
 
 export default {
     path: '/manage',
@@ -24,8 +26,8 @@ export default {
             path: 'order',
             component: Order
         },
-        userRoute,
-
+        UserRoute,
+        RoleRoute,
     ],
 
 }

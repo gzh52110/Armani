@@ -9,7 +9,7 @@
             <el-input v-model="form.password" show-password></el-input>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="submitForm('form')">提交</el-button>
+            <el-button type="primary" @click="submitForm('form')">登录</el-button>
            
         </el-form-item>
     </el-form>
@@ -44,8 +44,11 @@
                 this.$refs.form.validate(async (valid)=>{
                     if(valid){
                      const data = await this.$store.dispatch('user/loginIng',this.form);
+                     console.log('登陆成功',data);
                      //一定要登录成功，才能添加manage路由。
                      if(data.code===200){
+                        //登录成功，记录当前账号的角色
+                        this.$store.commit('role/getRole',data.data[0].role);
                         const {targetUrl = '/manage'} = this.$route.query;
                         this.$router.push(targetUrl)
                      }else{

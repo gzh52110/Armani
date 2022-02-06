@@ -81,7 +81,8 @@ import {
   Loading,
   MessageBox,
   Message,
-  descriptions
+  descriptions,
+  Avatar
  
 } from 'element-ui';
 
@@ -158,7 +159,8 @@ Vue.use(Calendar);
 Vue.use(Backtop);
 Vue.use(PageHeader);
 Vue.use(CascaderPanel);
-Vue.use(descriptions)
+Vue.use(descriptions);
+Vue.use(Avatar);
 
 
 Vue.use(Loading.directive);

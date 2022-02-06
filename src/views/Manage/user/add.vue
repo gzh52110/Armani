@@ -18,21 +18,31 @@
         <el-form-item label="手机号码" prop="phoneNumber">
           <el-input v-model="userForm.phoneNumber"></el-input>
         </el-form-item>
+        <el-form-item prop="birthday" label="生日" required>
+          <el-date-picker
+            type="date"
+            placeholder="生日"
+            v-model="userForm.birthday"
+            format="yyyy 年 MM 月 dd 日"
+            value-format="timestamp"
+            style="width: 100%"
+          ></el-date-picker>
+        </el-form-item>
         <el-form-item label="性别" prop="gender">
           <el-select v-model="userForm.gender" placeholder="性别">
             <el-option label="男" value="male"></el-option>
             <el-option label="女" value="female"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="生日" required>
-          <el-form-item prop="birthday">
-            <el-date-picker
-              type="date"
-              placeholder="生日"
-              v-model="userForm.birthday"
-              style="width: 100%"
-            ></el-date-picker>
-          </el-form-item>
+        <el-form-item label="角色">
+          <el-select v-model="userForm.role" placeholder="请选择角色">
+            <el-option
+              v-for="item in roleList"
+              :key="item._id"
+              :label="item.cnName"
+              :value="item.enName"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('userForm')"
@@ -47,7 +57,7 @@
           ref="uploadForm"
           name="avatar"
           class="avatar-uploader"
-          :action="$host + '/api/upload/goods/'"
+          :action="$host + '/api/upload/avatar'"
           :auto-upload="false"
           :on-change="onChange"
           :http-request="uploadFile"
@@ -67,8 +77,9 @@ export default {
         username: "",
         password: "",
         phoneNumber: "",
+        role: "admin",
         gender: "",
-        birthday: "",
+        birthday: 1640966400000,
       },
       rules: {
         username: [
@@ -85,7 +96,7 @@ export default {
           },
         ],
         gender: [
-          { required: true, message: "请选择活动区域", trigger: "change" },
+          { required: true, message: "请选择性别", trigger: "change" },
         ],
         birthday: [
           {
@@ -97,18 +108,27 @@ export default {
         ],
       },
       imageUrl: "",
+      userid: "",
+      roleList: [],
     };
+  },
+  async created() {
+    const roleData = await this.$request.get("/role/roleList");
+    this.roleList = roleData.data.data.result;
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         console.log("formData", this.userForm);
         if (valid) {
           alert("submit!");
-          this.$request.post("/manage/addlist", this.userForm).then((res) => {
-            console.log("res", res);
-          });
+          const { data } = await this.$request.post(
+            "/manage/addlist",
+            this.userForm
+          );
+          console.log("添加用户后返回", data);
 
+          this.userid = data.data.insertedId;
           // 上传图片
           this.$refs.uploadForm.submit();
         } else {
@@ -116,6 +136,18 @@ export default {
           return false;
         }
       });
+    },
+    async uploadFile(fileInfo) {
+      console.log("fileInfo", fileInfo);
+      const fData = new FormData();
+      fData.set("avatar", fileInfo.file);
+      fData.set("userid", this.userid);
+      // const productId = '';
+      // fData.set("productId", productId);
+      console.log("fData", fData);
+      const res = await this.$request.put("/upload/avatar", fData);
+
+      console.log("上传图片返回", res);
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
@@ -139,18 +171,6 @@ export default {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
-    },
-
-    async uploadFile(fileInfo) {
-      console.log("fileInfo", fileInfo);
-      const fData = new FormData();
-      fData.set("avatar", fileInfo.file);
-      // fData.set("userid", this.userInfo._id);
-      // fData.set("goodsid", this.goodsid);
-      console.log("fData", fData);
-      const res = await this.$request.post("/upload/avatar", fData);
-
-      console.log("上传图片返回", res);
     },
   },
 };
