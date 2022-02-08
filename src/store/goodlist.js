@@ -25,16 +25,17 @@ export default {
     //获取全部数据
     actions: {
         async goodsList(context,payload) {
-            const {data}= await request.post("/product",payload
-            );
-            console.log('data',data);
+            console.log('goodsliststore',payload);
+            // const {data}= await request.post("/product",payload
+            // );
+            // console.log('data',data);
         //   let result;
         //    const total = data.data.total;
         //     if(data.code==200){
         //          result = data.result.length>data.data.result.length?data.data.result:data.result;
         //         context.commit('goodslist',result)
         //     }
-           return data
+        //    return data
 
         }
     }

@@ -57,7 +57,7 @@ export default {
                 });
                 if (data.code === 200) {
                     //如果登录成功，就把新的登录人员写进localStorage。
-                    context.commit('login', data.data[0])
+                    context.commit('login', data.data[0])               
                     context.commit('addRoute')
                 }
 
