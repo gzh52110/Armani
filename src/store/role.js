@@ -1,6 +1,6 @@
-import request from '../utils/request'
+/* import request from '../utils/request'
 import router from '../router';
-import authRouter from "../router/authRouter"
+import authRouter from "../router/authRouter" */
 
 
 export default {

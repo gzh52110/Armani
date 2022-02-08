@@ -71,6 +71,7 @@ export default {
     },
   },
   async created() {
+    console.log("this",this);
     const { data } = await this.$request.get("/role/menu");
     this.permissionData = data.data.result;
     const roleData = await this.$request.get("/role/roleList");
@@ -89,12 +90,8 @@ export default {
       console.log('checked',checked);
       console.log('deep',deep);
     }, */
-    checkStatus(node, val2, val3) {
+    checkStatus(node) {
       node.flag = !node.flag;
-      // console.log("node", node);
-      // console.log("checkStatus-permission", this.permissionData);
-      // console.log("val2", val2);
-      // console.log("val3", val3);
     },
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
