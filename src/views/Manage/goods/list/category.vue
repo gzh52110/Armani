@@ -116,25 +116,54 @@
             <el-form
               :model="ruleForm"
               :rules="rules"
-              ref="ruleForm"
+              ref="form"
               label-width="100px"
               class="demo-ruleForm"
             >
               <el-form-item label="商品名称" prop="productName">
                 <el-input v-model="ruleForm.productName"></el-input>
               </el-form-item>
+              <el-form-item label="商品分类" prop="defaultPrice">
+                <el-select
+                  v-model="ruleForm.mainCategory"
+                  placeholder="请选择商品分类"
+                  @change="changeCate"
+                >
+                  <el-option
+                    :label="item.text"
+                    :value="item.type"
+                    v-for="item in category"
+                    :key="item.type"
+                  ></el-option>
+                </el-select>
+                <!-- 生成新的产品号 -->
+              </el-form-item>
+              <el-form-item label="产品号" prop="getCode">
+                <el-input
+                  type="age"
+                  autocomplete="off"
+                  v-model="ruleForm.productCode"
+                  disabled
+                  style="width: 230px"
+                ></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="getCode"  ref="button" :disabled="buttonStatus">生成</el-button>
+              </el-form-item>
               <!-- 上传图片 -->
-              <el-form-item label="商品图片" prop="imageUrl">
+              <el-form-item label="商品图片" prop="imgUrl">
                 <el-upload
                   class="avatar-uploader"
-                  :action="$baseURL + '/product'"
+                  :action="$host + '/product'"
                   :show-file-list="false"
-                  :on-success="handleAvatarSuccess"
+                  :on-change="onChange"
+                  :http-request="uploadImg"
                   :before-upload="beforeAvatarUpload"
+                  ref="uploadImg"
                 >
                   <img
-                    v-if="ruleForm.imageUrl"
-                    :src="ruleForm.imageUrl"
+                    v-if="ruleForm.imgUrl"
+                    :src="ruleForm.imgUrl"
                     class="avatar"
                   />
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -146,19 +175,7 @@
                   placeholder="商品价格"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="商品分类" prop="defaultPrice">
-                <el-select
-                  v-model="ruleForm.mainCategory"
-                  placeholder="请选择商品分类"
-                >
-                  <el-option
-                    :label="item.text"
-                    :value="item.type"
-                    v-for="item in category"
-                    :key="item.type"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
+
               <el-form-item label="商品特殊性质" prop="hotLabel">
                 <el-select
                   v-model="ruleForm.hotLabel"
@@ -166,13 +183,13 @@
                 >
                   <el-option
                     :label="it.text"
-                    :value="it.id"
+                    :value="it.text"
                     v-for="it in hotLabels"
                     :key="it.id"
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="商品简介" prop="desc">
+              <el-form-item label="商品简介" prop="introduction">
                 <el-input
                   type="textarea"
                   v-model="ruleForm.introduction"
@@ -181,10 +198,8 @@
               <el-form-item> </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-              <el-button @click="dialogFormVisible = false">取 消</el-button>
-              <el-button type="primary" @click="dialogFormVisible = false"
-                >确 定</el-button
-              >
+              <el-button @click="(dialogFormVisible = false),(buttonStatus=true)">取 消</el-button>
+              <el-button type="primary" @click="editGoodsInfo">确 定</el-button>
             </div>
           </el-dialog>
           <el-button
@@ -192,7 +207,7 @@
             icon="el-icon-delete"
             circle
             size="mini"
-            @click="removeItem(row.productCode)"
+            @click="removeItem(row._id)"
           ></el-button>
         </el-table-column>
       </el-table>
@@ -213,7 +228,9 @@
 <script>
 import { mapActions } from "vuex";
 import introduction from "./introduction.vue";
+import goodsMixins from "../../../../mixins/goodsMixins";
 export default {
+  mixins: [goodsMixins],
   props: {
     mainCategory: String,
   },
@@ -228,24 +245,13 @@ export default {
       size,
       childernlist: [],
       total: 0,
-      imgs: "",
-      newImgs: [],
       ruleForm: {},
       formLabelWidth: "100",
       dialogTableVisible: false,
-      dialogFormVisible: false,
+      dialogFormVisible: false,//修改信息的弹窗状态初始值
       dialogFormVisibles: false,
       itemlist: {},
-      rules: {
-        productName: [
-          { required: true, message: "请输入商品名称", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
-        defaultPrice: [
-          { required: true, message: "请选择商品分类", trigger: "blur" },
-        ],
-        desc: [{ required: true, message: "请填写商品简介", trigger: "blur" }],
-      },
+      currenCate: "",
       category: [
         {
           text: "彩妆",
@@ -293,31 +299,13 @@ export default {
       return !!this.mainCategory;
     },
   },
-
+ 
   methods: {
     //处理不同路由不同请求
     handelCurrentRoute() {
       const routers = this.$route.fullPath.includes("all");
       routers ? this.getDate("/list") : this.getDate("/categroylist");
-      // if (routers) {
-      //   this.getDate("/list");
-      // } else {
-      //   this.getDate("/categroylist");
-      // }
     },
-    //     async getDate() {
-    //       const {result,total} = await this.$store.dispatch("goodslist/goodsList", {
-    //         params: { page: this.page, size: this.size },
-    //       });
-    //      this.tableData = result;
-
-    // //     this.imgs =this.tableData.map(item=>item.productImages).filter(item=> item[0]
-    // // )
-    // // this.newImgs =[...this.imgs]
-    // // console.log('this',this.newImgs);
-
-    //     this.total = total
-    //     },
     async getDate(routerId) {
       const {
         data: {
@@ -331,18 +319,8 @@ export default {
         },
       });
 
-      // const { data } = await this.$request.get("/product/list", {
-      //   params: {
-      //     page: this.page,
-      //     size: this.size,
-      //   },
-      // });
-      // const result =
-      //   data.data.result.lenght > data.data.newgoodlist.lenght
-      //     ? data.data.result
-      //     : data.data.newgoodlist;
       this.tableData = result;
-
+      console.log('this.tableData',this.tableData);
       this.total = total;
       this.childernlist = this.tableData.map((item) => item.childProductList);
       localStorage.setItem("goodslist", JSON.stringify(result));
@@ -372,20 +350,12 @@ export default {
       const strDate = Y + M + D + h + m + s;
       return strDate;
     },
-    //处理图片
-    formDateImg(imgs){
-      console.log('imgs',imgs);
-      if(!imgs){
-        return this.$host+'/img/armanilogo.jpeg'
+    //处理商品列表的图片
+    formDateImg(imgs) {
+      if (!imgs) {
+        return this.$host + "/img/armanilogo.jpeg";
       }
-     return imgs.includes('giorgioarmanibeauty')? imgs : this.$host+imgs
-      // if(imgs.includes('giorgioarmanibeauty')){
-      //   return imgs
-      // }else{
-      //   return this.$host+imgs
-      // }
-    
-
+      return imgs.includes("giorgioarmanibeauty") ? imgs : this.$host + imgs;
     },
 
     //最高价格
@@ -414,51 +384,76 @@ export default {
       });
     },
 
-    //⭐删除还没做
-    ...mapActions({
-      removeItem(dispatch, id) {
-        dispatch("removeItem", id);
-        this.tableData = this.tableData.filter((item) => item._id != id);
-      },
-    }),
+    //序号
     indexMethod(index) {
       return index + 1;
     },
+    //修改商品信息按钮，点击之后出现弹窗，并且显示当前商品信息。
     editItem(row) {
       this.ruleForm = {
         productName: row.productName,
         defaultPrice: row.defaultPrice,
         hotLabel: row.hotLabel,
-        desc: "",
-        imageUrl: row.productImages[0],
+        introduction: "",
+        imgUrl: this.imgInfo(row.productImages[0]),
         mainCategory: row.mainCategory,
+        productCode: row.productCode,
       };
+      this.goodsId = row._id;
+      console.log('clickEdit',this.ruleForm);
+    },
+    //处理修改商品信息显示的图片
+    imgInfo(row) {
+      return row.includes("giorgioarmanibeauty") ? row : this.$host + row;
     },
 
-    //获取单个商品信息
+    //点击之后，能获取当前商品的商品信息
     getItem(row) {
-      //⭐⭐因为新增的数据没有productCode，所以不能获取新增的数据。
       this.$request.get("/product/" + row.productCode).then(({ data }) => {
         this.itemlist = data.data;
       });
     },
 
-    handleAvatarSuccess(res, file) {
-      this.ruleForm.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      // const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
+    //确定修改商品信息
+    editGoodsInfo() {
+      this.$refs.form.validate(async (valid) => {
+        if (valid) {
+           console.log('edited success',this.ruleForm);
+           const {data} =await this.$request.put('/product/'+this.goodsId,this.ruleForm);
+           if(data.code==200){
+             this.$alert("修改成功", "提示", {
+                type: "success",
+                confirmButtonText: '确定',
+              })
+              // this.$forceUpdate(); //重新渲染组件
+              // 修改弹窗的状态修改为隐藏
+               this.dialogFormVisible=false;
 
-      // if (!isJPG) {
-      //   this.$message.error('上传头像图片只能是 JPG 格式!');
-      // }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isLt2M;
+               //获取最新数据库新数据
+               this.handelCurrentRoute()
+              
+           }
+
+           //触发上传图片事件
+          this.$refs.uploadImg.submit();
+          
+          //修改按钮状态为禁止点击
+          this.buttonStatus=true;
+         
+        }
+      });
     },
+     //删除
+     async removeItem(id) {
+      const {data} = await this.$request.delete('/product/'+id);
+     if(data.code==200){
+      this.handelCurrentRoute()
+     }
+      },
+    
   },
+ 
+
   components: {
     introduction,
   },
@@ -512,7 +507,7 @@ export default {
     }
   }
 }
-.el-dialog{
+.el-dialog {
   text-align: left;
 }
 </style>
