@@ -19,17 +19,17 @@
 
 >截有代表性得页面，不少于3张
 >
->- 首页![home][https://raw.githubusercontent.com/gzh52110/Armani/dev/README_IMG/01home_20220208152439.png]
+>- 首页![home](https://raw.githubusercontent.com/gzh52110/Armani/dev/README_IMG/01home_20220208152439.png)
 
->- 添加用户![adduser][https://raw.githubusercontent.com/gzh52110/Armani/dev/README_IMG/02adduser_20220208152428.png]
+>- 添加用户![adduser](https://raw.githubusercontent.com/gzh52110/Armani/dev/README_IMG/02adduser_20220208152428.png)
 >
->- 商品列表![goodlist][https://raw.githubusercontent.com/gzh52110/Armani/dev/README_IMG/03goodslist_img_20220208192435.png]
+>- 商品列表![goodlist](https://raw.githubusercontent.com/gzh52110/Armani/dev/README_IMG/03goodslist_img_20220208192435.png)
 >
->- 添加商品![addgoods][https://raw.githubusercontent.com/gzh52110/Armani/dev/README_IMG/04addgoods_20220208192406.png]
+>- 添加商品![addgoods](https://raw.githubusercontent.com/gzh52110/Armani/dev/README_IMG/04addgoods_20220208192406.png)
 >
->- 修改商品信息![updategoods][https://raw.githubusercontent.com/gzh52110/Armani/dev/README_IMG/05updategoods_20220208192508.png]
+>- 修改商品信息![updategoods](https://raw.githubusercontent.com/gzh52110/Armani/dev/README_IMG/05updategoods_20220208192508.png)
 >
->- 角色权限指派![roleassign][https://raw.githubusercontent.com/gzh52110/Armani/dev/README_IMG/06roleassign_20220208150744.png]
+>- 角色权限指派![roleassign](https://raw.githubusercontent.com/gzh52110/Armani/dev/README_IMG/06roleassign_20220208150744.png)
 
 ### 项目目录说明
 - public      
