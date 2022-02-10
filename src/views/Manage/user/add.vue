@@ -140,6 +140,7 @@ export default {
     async uploadFile(fileInfo) {
       console.log("fileInfo", fileInfo);
       const fData = new FormData();
+      // 这里的不确定是否为"avatar"，可以用fileInfo.filename
       fData.set("avatar", fileInfo.file);
       fData.set("userid", this.userid);
       // const productId = '';
