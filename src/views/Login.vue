@@ -48,7 +48,7 @@
                      //一定要登录成功，才能添加manage路由。
                      if(data.code===200){
                         //登录成功，记录当前账号的角色
-                        this.$store.commit('role/getRole',data.data[0].role);
+                        // this.$store.commit('role/getRole',data.data[0].role);
                         const {targetUrl = '/manage'} = this.$route.query;
                         this.$router.push(targetUrl)
                      }else{

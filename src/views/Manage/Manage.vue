@@ -107,10 +107,11 @@ export default {
     ...mapState("role", { userRole: "role" }),
   },
   async created() {
-    this.role = this.getRole(this.userInfo.role);
+    // 记录当前用户角色id
+    this.getRole(this.userInfo.roleId);
     const { data } = await this.$request.get("/role/permission", {
       params: {
-        role: this.userRole,
+        roleId: this.userRole,
       },
     });
     this.list = data.data.roleAccess;

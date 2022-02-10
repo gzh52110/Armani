@@ -43,7 +43,7 @@
         prop="regtime"
         sortable
       ></el-table-column>
-      <el-table-column label="角色" prop="role"></el-table-column>
+      <el-table-column label="角色" prop="roleCnName"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"

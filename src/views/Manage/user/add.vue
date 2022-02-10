@@ -35,12 +35,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="角色">
-          <el-select v-model="userForm.role" placeholder="请选择角色">
+          <el-select v-model="userForm.roleId" placeholder="请选择角色">
             <el-option
               v-for="item in roleList"
               :key="item._id"
               :label="item.cnName"
-              :value="item.enName"
+              :value="item._id"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -77,7 +77,7 @@ export default {
         username: "",
         password: "",
         phoneNumber: "",
-        role: "admin",
+        roleId: "",
         gender: "",
         birthday: 1640966400000,
       },
@@ -95,9 +95,7 @@ export default {
             trigger: "blur",
           },
         ],
-        gender: [
-          { required: true, message: "请选择性别", trigger: "change" },
-        ],
+        gender: [{ required: true, message: "请选择性别", trigger: "change" }],
         birthday: [
           {
             type: "date",
