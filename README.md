@@ -32,21 +32,72 @@
 >- 角色权限指派![roleassign](https://raw.githubusercontent.com/gzh52110/Armani/dev/README_IMG/06roleassign_20220208150744.png)
 
 ### 项目目录说明
-- public      
-- src   项目源代码
-  - assets
-  - mixins
-  - router
-  - store
-  - utils
-  - views
-  - App.vue
-  - main.js
-- babel.config.js
-- package-lock.json
-- package.json
-- README.md
-- vue.config.js
+├─babel.config.js
+├─package-lock.json
+├─package.json
+├─README.md
+├─result.txt
+├─vue.config.js
+├─src
+|  ├─App.vue
+|  ├─main.js
+|  ├─views
+|  |   ├─Login.vue
+|  |   ├─Manage
+|  |   |   ├─Goods.vue
+|  |   |   ├─Home.vue
+|  |   |   ├─Manage.vue
+|  |   |   ├─Order.vue
+|  |   |   ├─Role.vue
+|  |   |   ├─User.vue
+|  |   |   ├─user
+|  |   |   |  ├─add.vue
+|  |   |   |  └list.vue
+|  |   |   ├─role
+|  |   |   |  ├─Add.vue
+|  |   |   |  ├─Assign copy.vue
+|  |   |   |  ├─Assign.vue
+|  |   |   |  └List.vue
+|  |   |   ├─goods
+|  |   |   |   ├─add.vue
+|  |   |   |   ├─edit.vue
+|  |   |   |   ├─list.vue
+|  |   |   |   ├─list
+|  |   |   |   |  ├─all copy.vue
+|  |   |   |   |  ├─all.vue
+|  |   |   |   |  ├─category.vue
+|  |   |   |   |  ├─fragrance copy.vue
+|  |   |   |   |  ├─fragrance.vue
+|  |   |   |   |  ├─introduction.vue
+|  |   |   |   |  ├─makeup copy.vue
+|  |   |   |   |  ├─makeup.vue
+|  |   |   |   |  ├─others copy.vue
+|  |   |   |   |  ├─others.vue
+|  |   |   |   |  ├─skincare copy.vue
+|  |   |   |   |  └skincare.vue
+|  ├─utils
+|  |   ├─index.js
+|  |   └request.js
+|  ├─store
+|  |   ├─goodlist.js
+|  |   ├─index.js
+|  |   ├─role.js
+|  |   └user.js
+|  ├─router
+|  |   ├─authRouter.js
+|  |   ├─goodslistCategory.js
+|  |   ├─goodsRoute.js
+|  |   ├─index.js
+|  |   ├─roleRoute.js
+|  |   └userRoute.js
+|  ├─mixins
+|  |   └goodsMixins.js
+|  ├─assets
+|  |   └logo.png
+├─README_IMG
+├─public
+|   ├─favicon.ico
+|   └index.html
 
 
 ## Project setup
